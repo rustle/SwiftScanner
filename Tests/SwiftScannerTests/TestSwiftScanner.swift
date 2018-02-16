@@ -177,7 +177,9 @@ class SwiftScannerTests: XCTestCase {
 			while !scanner.isAtEnd  {
 				let blockValue = try scanner.scan(upTo: separator)
 				XCTAssert( (blockValue == validValues[idx]) , "Failed to validate scan(upTo:<String>)")
-				if (idx < validValues.count) { try scanner.skip(length: separator.characters.count) }
+				if (idx < validValues.count) {
+                    try scanner.skip(length: separator.count)
+                }
 				idx += 1
 			}
 		} catch let err {
@@ -200,7 +202,7 @@ class SwiftScannerTests: XCTestCase {
 				XCTAssert( (blockValue == validValues[idx]) , "Failed to validate scan(length:)")
 				idx += 1
 				if (idx < validValues.count) {
-					try scanner.skip(length: separator.characters.count)
+					try scanner.skip(length: separator.count)
 				}
 			}
 		} catch let err {
@@ -356,7 +358,7 @@ class SwiftScannerTests: XCTestCase {
 		}
 		
 		let scanner = StringScanner(test)
-		let length = test.characters.count
+		let length = test.count
 		
 		var idx = 0
 		do {
@@ -414,7 +416,7 @@ class SwiftScannerTests: XCTestCase {
 				let scanner_char = scanner.string[scanner.position]
 				XCTAssert( (test_char == scanner_char) , "Failed to validate back()")
 				
-				if positionInChar < test.characters.count {
+				if positionInChar < test.count {
 					try scanner.back()
 					positionInChar += 1
 				} else {

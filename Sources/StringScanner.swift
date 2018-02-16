@@ -188,9 +188,7 @@ public class StringScanner {
 			self.consumed -= length
 		}
 		
-		guard let strValue = try self.scan(untilIn: CharacterSet(charactersIn: "-+0123456789.")) else {
-			throw StringScannerError.invalidFloat
-		}
+		let strValue = try self.scan(untilIn: CharacterSet(charactersIn: "-+0123456789."))
 		guard let value = Float(strValue) else {
 			throw StringScannerError.invalidFloat
 		}
@@ -246,8 +244,8 @@ public class StringScanner {
 	/// - Parameter char: scalar to search
 	/// - Returns: the string until the character (excluded)
 	/// - Throws: throw an exception on .eof or .notFound
-	public func scan(upTo char: UnicodeScalar) throws -> String? {
-		return try self.move(peek: false, upTo: char).string
+	public func scan(upTo char: UnicodeScalar) throws -> String {
+		return try self.move(peek: false, upTo: char).string ?? ""
 	}
 	
 	/// Scan until given character's is found.
@@ -257,8 +255,8 @@ public class StringScanner {
 	/// - Parameter charSet: character set to search
 	/// - Returns: found index
 	/// - Throws: throw .eof or .notFound
-	public func scan(upTo charSet: CharacterSet) throws -> String? {
-		return try self.move(peek: false, accumulate: true, upToCharSet: charSet).string
+	public func scan(upTo charSet: CharacterSet) throws -> String {
+		return try self.move(peek: false, accumulate: true, upToCharSet: charSet).string ?? ""
 	}
 	
 	/// Scan until the next character of the scanner is contained into given character set
@@ -267,8 +265,8 @@ public class StringScanner {
 	/// - Parameter charSet: chracters set
 	/// - Returns: the string accumulated scanning until chars set is evaluated
 	/// - Throws: throw .eof or .notFound
-	public func scan(untilIn charSet: CharacterSet) throws -> String? {
-		return try self.move(peek: false, accumulate: true, untilIn: charSet).string
+	public func scan(untilIn charSet: CharacterSet) throws -> String {
+		return try self.move(peek: false, accumulate: true, untilIn: charSet).string ?? ""
 	}
 	
 	/// Scan until specified string is encountered and update indexes if found
@@ -278,8 +276,8 @@ public class StringScanner {
 	/// - Returns: string up to search string (excluded)
 	/// - Throws: throw .eof or .notFound
 	@discardableResult
-	public func scan(upTo string: String) throws -> String? {
-		return try self.move(peek: false, upTo: string).string
+	public func scan(upTo string: String) throws -> String {
+		return try self.move(peek: false, upTo: string).string ?? ""
 	}
 	
 	///  Scan and consume at the scalar starting from current position, testing it with function test.
@@ -289,7 +287,7 @@ public class StringScanner {
 	/// - Returns: accumulated string
 	@discardableResult
 	public func scan(untilTrue test: ((UnicodeScalar) -> (Bool)) ) -> String {
-		return self.move(peek: false, accumulate: true, untilTrue: test).string!
+		return self.move(peek: false, accumulate: true, untilTrue: test).string ?? ""
 	}
 	
 	/// Read next length characters and accumulate it
@@ -301,7 +299,7 @@ public class StringScanner {
 	/// - Throws: throw an .eof exception
 	@discardableResult
 	public func scan(length: Int = 1) throws -> String {
-		return try self.move(length, accumulate: true).string!
+		return try self.move(length, accumulate: true).string ?? ""
 	}
 	
 	//-----------------
